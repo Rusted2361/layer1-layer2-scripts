@@ -11,29 +11,10 @@ mkdir -p layer1
 cd layer1
 mkdir -p bin
 
-# Check if Go 1.19.13 is already installed
-if ! go version | grep -q "go1.19.13"; then
-  echo "Current Go version: $(go version)"
-  echo "Need Go 1.19.13 for Prysm build..."
-  
-  # Try to source gvm
-  if [[ -s "$HOME/.gvm/scripts/gvm" ]]; then
-    echo "Sourcing gvm..."
-    source "$HOME/.gvm/scripts/gvm"
-    
-    # Install and use Go 1.19.13
-    echo "Installing Go 1.19.13..."
-    gvm install go1.19.13 || echo "Go 1.19.13 already installed"
-    gvm use go1.19.13 || echo "Failed to switch to Go 1.19.13"
-    
-    echo "Active Go version: $(go version)"
-  else
-    echo "⚠️  gvm not found. Please install Go 1.19.13 manually or install gvm first."
-    echo "Continuing with current Go version..."
-  fi
-else
-  echo "✅ Go 1.19.13 already active"
-fi
+source  $GVM_ROOT/scripts/gvm
+gvm install go1.19.13
+gvm use go1.19.13
+go version
 
 # === Check & Clone Repos ===
 if [ ! -d "go-ethereum" ]; then
