@@ -22,7 +22,7 @@ if [ ! -f "bin/geth" ]; then
     make geth
     cp build/bin/geth bin/geth
 fi
-
+cp build/bin/geth bin/geth
 cd ..
 
 echo "creating op-node"
