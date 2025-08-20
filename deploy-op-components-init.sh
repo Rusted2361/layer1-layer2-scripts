@@ -20,9 +20,9 @@ if go version | grep -q "go1.23.0"; then
 
 if [ ! -f "bin/geth" ]; then
     make geth
-    cp build/bin/geth bin/geth
+    cp cp build/bin/geth ../sequencer-node/bin/
 fi
-cp build/bin/geth bin/geth
+cp cp build/bin/geth ../sequencer-node/bin/
 cd ..
 
 echo "creating op-node"
