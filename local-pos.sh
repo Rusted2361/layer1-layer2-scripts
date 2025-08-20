@@ -11,24 +11,18 @@ mkdir -p layer1
 cd layer1
 mkdir -p bin
 
-source  $GVM_ROOT/scripts/gvm
-gvm install go1.19.13
-gvm use go1.19.13
-go version
-
 # === Check & Clone Repos ===
 if [ ! -d "go-ethereum" ]; then
   echo "[1/9] Cloning Geth..."
   git clone git@github.com:ethereum/go-ethereum.git
+  cd go-ethereum
+  git checkout $GETH_COMMIT
+  make geth
+  cp ./build/bin/geth ../bin/geth
+  cd ..
 else
   echo "[1/9] Geth already cloned."
 fi
-
-cd go-ethereum
-git checkout $GETH_COMMIT
-make geth
-cp ./build/bin/geth ../bin/geth
-cd ..
 
 if [ ! -d "prysm" ]; then
   echo "[2/9] Cloning Prysm..."
@@ -75,7 +69,7 @@ EOF
 fi
 
 # === Download genesis.json ===
-rm -rf genesis.json
+# rm -rf genesis.json
 if [ ! -f genesis.json ]; then
   echo "[6/9] Downloading genesis.json..."
   curl -s https://api.jsonbin.io/v3/qs/68a346b6ae596e708fcd5fc7 | jq '.record' > genesis.json
