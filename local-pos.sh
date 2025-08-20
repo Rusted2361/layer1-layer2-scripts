@@ -77,6 +77,16 @@ else
   echo "[6/9] genesis.json already exists."
 fi
 
+# === Check if genesis.json is empty ===
+if [ ! -s genesis.json ]; then
+  echo "⚠️  WARNING: genesis.json is empty!"
+  echo "Please copy the genesis.json content from this link:"
+  echo "https://docs.google.com/document/d/1eddhKQOPiVhzCaxpz9d3hbuTnp4GCF4tqi6-EiS0Srk/edit?tab=t.0"
+  echo ""
+  echo "Exiting script. Please fix genesis.json and run again."
+  exit 1
+fi
+
 # === Initialize chain ===
 rm -rf gethdata beacondata validatordata genesis.ssz 
 echo "[7/9] Importing private key..."
@@ -91,63 +101,42 @@ echo "[9/9] Generating beacon genesis..."
   --output-ssz=genesis.ssz \
   --chain-config-file=config.yml
 
+# === Create password file ===
+if [ ! -f password.txt ]; then
+  echo "[9.1/9] Creating password.txt..."
+  echo "" > password.txt
+fi
+
 # === Final Instructions ===
 cat <<EOF
 
 🚀 Setup complete!
 
-Now run the following in separate terminals:
+Run in background (nohup):
+===================================
 
 Terminal 1: Geth Execution Client
 ---------------------------------
-./bin/geth \
-  --datadir gethdata \
-  --http --http.addr 0.0.0.0 \
-  --http.port 8545 \
-  --http.api "eth,net,web3,engine" \
-  --http.corsdomain "https://remix.ethereum.org" \
-  --http.vhosts "localhost,127.0.0.1" \
-  --authrpc.addr localhost \
-  --authrpc.port 8551 \
-  --authrpc.vhosts localhost \
-  --authrpc.jwtsecret gethdata/geth/jwtsecret \
-  --allow-insecure-unlock \
-  --unlock 0x123463a4b065722e99115d6c222f267d9cabb524 \
-  --password "" \
-  --mine \
-  --nodiscover \
-  --syncmode full
+nohup ./bin/geth --datadir gethdata --http --http.addr 0.0.0.0 --http.port 8545 --http.api "eth,net,web3,engine" --http.corsdomain "https://remix.ethereum.org" --http.vhosts "localhost,127.0.0.1" --authrpc.addr localhost --authrpc.port 8551 --authrpc.vhosts localhost --authrpc.jwtsecret gethdata/geth/jwtsecret --allow-insecure-unlock --unlock 0x123463a4b065722e99115d6c222f267d9cabb524 --password ./password.txt --mine --nodiscover --syncmode full > geth.log 2>&1 &
 
 Terminal 2: Beacon Chain
 ------------------------
-./bin/beacon-chain \
-  --datadir=beacondata \
-  --min-sync-peers=0 \
-  --interop-genesis-state=genesis.ssz \
-  --interop-eth1data-votes \
-  --bootstrap-node= \
-  --chain-config-file=config.yml \
-  --chain-id=20253 \
-  --execution-endpoint=http://localhost:8551 \
-  --accept-terms-of-use \
-  --jwt-secret=gethdata/geth/jwtsecret
+nohup ./bin/beacon-chain --datadir=beacondata --min-sync-peers=0 --interop-genesis-state=genesis.ssz --interop-eth1data-votes --bootstrap-node= --chain-config-file=config.yml --chain-id=20253 --execution-endpoint=http://localhost:8551 --accept-terms-of-use --jwt-secret=gethdata/geth/jwtsecret > chain.log 2>&1 &
 
 Terminal 3: Validator Client
 ----------------------------
-./bin/validator \
-  --datadir=validatordata \
-  --accept-terms-of-use \
-  --interop-num-validators=64 \
-  --interop-start-index=0 \
-  --force-clear-db \
-  --chain-config-file=config.yml \
-  --config-file=config.yml
+nohup ./bin/validator --datadir=validatordata --accept-terms-of-use --interop-num-validators=64 --interop-start-index=0 --force-clear-db --chain-config-file=config.yml --config-file=config.yml > validator.log 2>&1 &
 
-Terminal 4: IPC Console (optional)
+Terminal 4: IPC Console
 ----------------------------------
 ./bin/geth attach ipc:gethdata/geth.ipc
 
 Inside the console, run:
 > miner.start()
+
+📋 Background Process Management:
+- View logs: tail -f geth.log, tail -f chain.log, tail -f validator.log
+- Stop processes: pkill -f geth, pkill -f beacon-chain, pkill -f validator
+- Check running processes: ps aux | grep -E "(geth|beacon|validator)"
 
 EOF
