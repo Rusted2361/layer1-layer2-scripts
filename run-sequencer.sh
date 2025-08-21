@@ -3,8 +3,8 @@
 cd layer2/sequencer-node
 #save below script to scripts/start-op-geth.sh
 source .env
-cp ../bin/geth .
-cp ../bin/op-node .
+cp ../../layer2/op-geth/build/bin/geth .
+cp ../../layer2/bin/op-node .
 
 cat <<EOF > scripts/start-op-geth.sh
 #!/bin/bash
@@ -12,7 +12,7 @@ cat <<EOF > scripts/start-op-geth.sh
 source .env
  
 # Path to the op-geth binary we built
-./geth \
+nohup ./geth \
   --datadir=./op-geth-data \
   --http \
   --http.addr=0.0.0.0 \
@@ -36,7 +36,7 @@ source .env
   --nodiscover \
   --maxpeers=0 \
   --rollup.disabletxpoolgossip=true \
-  --rollup.sequencerhttp=http://localhost:$OP_NODE_RPC_PORT
+  --rollup.sequencerhttp=http://localhost:$OP_NODE_RPC_PORT > opgeth.log 2>&1 &
 EOF
 
 cat <<EOF > scripts/start-op-node.sh
@@ -45,7 +45,7 @@ cat <<EOF > scripts/start-op-node.sh
 source .env
  
 # Path to the op-node binary we built
-./op-node \
+nohup ./op-node \
   --l1=$L1_RPC_URL \
   --l1.beacon=$L1_BEACON_URL \
   --l2=http://localhost:$OP_GETH_AUTH_PORT \
@@ -59,13 +59,13 @@ source .env
   --rpc.addr=0.0.0.0 \
   --rpc.port=$OP_NODE_RPC_PORT \
   --rpc.enable-admin \
-  --log.level=info 
+  --log.level=info > opnode.log 2>&1 &
 EOF
 
 chmod +x scripts/start-op-geth.sh
 chmod +x scripts/start-op-node.sh
 
-../bin/geth init --datadir=./op-geth-data --state.scheme=hash ./genesis.json
+./geth init --datadir=./op-geth-data --state.scheme=hash ./genesis.json
 
 echo "please run below command to start op-geth"
 echo "./scripts/start-op-geth.sh"
