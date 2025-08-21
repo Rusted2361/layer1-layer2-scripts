@@ -11,7 +11,7 @@ cat <<EOF > scripts/start-batcher.sh
 source .env
  
 # Path to the op-batcher binary we built
-../optimism/op-batcher/bin/op-batcher \
+nohup ../optimism/op-batcher/bin/op-batcher \
   --l2-eth-rpc=$L2_RPC_URL \
   --rollup-rpc=$ROLLUP_RPC_URL \
   --poll-interval=$POLL_INTERVAL \
@@ -29,7 +29,7 @@ source .env
   --data-availability-type=calldata \
   --throttle-threshold=0 \
   --throttle-always-block-size=0 \
-  --log.level=info
+  --log.level=info > opbatcher.log 2>&1 &
 EOF
 
 chmod +x scripts/start-batcher.sh

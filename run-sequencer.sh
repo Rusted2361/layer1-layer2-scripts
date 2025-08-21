@@ -65,6 +65,8 @@ EOF
 chmod +x scripts/start-op-geth.sh
 chmod +x scripts/start-op-node.sh
 
+rm -rf op-geth-data
+
 ./geth init --datadir=./op-geth-data --state.scheme=hash ./genesis.json
 
 echo "please run below command to start op-geth"
