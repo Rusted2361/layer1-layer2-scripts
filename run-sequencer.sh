@@ -19,7 +19,7 @@ source .env
   --http.port=$OP_GETH_HTTP_PORT \
   --http.vhosts="*" \
   --http.corsdomain="*" \
-  --http.api=eth,net,web3,debug,txpool,admin \
+  --http.api=eth,net,web3,debug,txpool,admin,personal \
   --ws \
   --ws.addr=0.0.0.0 \
   --ws.port=$OP_GETH_WS_PORT \
