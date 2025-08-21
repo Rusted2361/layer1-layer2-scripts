@@ -121,7 +121,7 @@ nohup ./bin/geth --datadir gethdata --http --http.addr 0.0.0.0 --http.port 8545 
 
 Terminal 2: Beacon Chain
 ------------------------
-nohup ./bin/beacon-chain --datadir=beacondata --min-sync-peers=0 --interop-genesis-state=genesis.ssz --interop-eth1data-votes --bootstrap-node= --chain-config-file=config.yml --chain-id=20253 --execution-endpoint=http://localhost:8551 --accept-terms-of-use --jwt-secret=gethdata/geth/jwtsecret > chain.log 2>&1 &
+nohup ./bin/beacon-chain --datadir=beacondata --min-sync-peers=0 --interop-genesis-state=genesis.ssz --interop-eth1data-votes --bootstrap-node= --chain-config-file=config.yml --chain-id=20253 --execution-endpoint=http://localhost:8551 --accept-terms-of-use --jwt-secret=gethdata/geth/jwtsecret --grpc-gateway-host=0.0.0.0 --grpc-gateway-port=3500 --rpc-host=0.0.0.0 --rpc-port=4000 > chain.log 2>&1 &
 
 Terminal 3: Validator Client
 ----------------------------
