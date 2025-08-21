@@ -20,9 +20,9 @@ if go version | grep -q "go1.23.0"; then
 
 if [ ! -f "bin/geth" ]; then
     make geth
-    cp cp build/bin/geth ../sequencer-node/bin/
+    cp build/bin/geth bin/geth
 fi
-cp cp build/bin/geth ../sequencer-node/bin/
+
 cd ..
 
 echo "creating op-node"
@@ -77,12 +77,12 @@ echo ""
 echo "Please provide the following configuration values:"
 
 # Ask for L1 RPC URL
-read -p "L1 RPC URL [default: http://127.0.0.1:8545]: " L1_RPC_INPUT
-L1_RPC_URL=${L1_RPC_INPUT:-http://127.0.0.1:8545}
+read -p "L1 RPC URL [default: http://43.205.146.113:8545]: " L1_RPC_INPUT
+L1_RPC_URL=${L1_RPC_INPUT:-http://43.205.146.113:8545}
 
 # Ask for L1 Beacon URL  
-read -p "L1 Beacon URL [default: http://localhost:3500]: " L1_BEACON_INPUT
-L1_BEACON_URL=${L1_BEACON_INPUT:-http://localhost:3500}
+read -p "L1 Beacon URL [default: http://43.205.146.113:3500]: " L1_BEACON_INPUT
+L1_BEACON_URL=${L1_BEACON_INPUT:-http://43.205.146.113:3500}
 
 # Ask for private key
 read -p "Private Key [default: 0x2e0834786285daccd064ca17f1654f67b4aef298acbb82cef9ec422fb4975622]: " PRIVATE_KEY_INPUT
@@ -153,8 +153,8 @@ echo ""
 echo "Please provide the following proposer configuration values:"
 
 # Ask for L1 RPC URL
-read -p "L1 RPC URL [default: http://127.0.0.1:8545]: " L1_RPC_INPUT
-L1_RPC_URL=${L1_RPC_INPUT:-http://127.0.0.1:8545}
+read -p "L1 RPC URL [default: http://43.205.146.113:8545]: " L1_RPC_INPUT
+L1_RPC_URL=${L1_RPC_INPUT:-http://43.205.146.113:8545}
 
 # Ask for L2 RPC URL
 read -p "L2 RPC URL [default: http://localhost:9545]: " L2_RPC_INPUT
@@ -219,8 +219,8 @@ echo ""
 echo "Please provide the following batcher configuration values:"
 
 # Ask for L1 RPC URL
-read -p "L1 RPC URL [default: http://127.0.0.1:8545]: " L1_RPC_INPUT
-L1_RPC_URL=${L1_RPC_INPUT:-http://127.0.0.1:8545}
+read -p "L1 RPC URL [default: http://43.205.146.113:8545]: " L1_RPC_INPUT
+L1_RPC_URL=${L1_RPC_INPUT:-http://43.205.146.113:8545}
 
 # Ask for L2 RPC URL
 read -p "L2 RPC URL [default: http://localhost:9545]: " L2_RPC_INPUT
