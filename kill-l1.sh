@@ -1,5 +1,4 @@
-#!/bin/bash
-
-kill -9 $(ps aux | grep geth | grep -v grep | awk '{print $2}')
-kill -9 $(ps aux | grep beacon-chain | grep -v grep | awk '{print $2}')
-kill -9 $(ps aux | grep validator | grep -v grep | awk '{print $2}')
+#!/usr/bin/env bash
+pgrep -f geth         | xargs -r kill -9
+pgrep -f beacon-chain | xargs -r kill -9
+pgrep -f validator    | xargs -r kill -9
