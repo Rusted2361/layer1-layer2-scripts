@@ -14,7 +14,7 @@ mkdir -p bin
 # === Check & Clone Repos ===
 if [ ! -d "go-ethereum" ]; then
   echo "[1/9] Cloning Geth..."
-  git clone git@github.com:ethereum/go-ethereum.git
+  git clone https://github.com/ethereum/go-ethereum.git
   cd go-ethereum
   git checkout $GETH_COMMIT
   make geth
@@ -26,7 +26,7 @@ fi
 
 if [ ! -d "prysm" ]; then
   echo "[2/9] Cloning Prysm..."
-  git clone git@github.com:OffchainLabs/prysm.git
+  git clone https://github.com/OffchainLabs/prysm.git
   cd prysm
   git checkout $PRYSM_COMMIT
   go build -o=../bin/beacon-chain ./cmd/beacon-chain
