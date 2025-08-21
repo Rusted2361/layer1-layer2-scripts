@@ -77,15 +77,11 @@ else
   echo "[6/9] genesis.json already exists."
 fi
 
-# === Check if genesis.json is empty ===
-if [ ! -s genesis.json ]; then
-  echo "⚠️  WARNING: genesis.json is empty!"
-  echo "Please copy the genesis.json content from this link:"
-  echo "https://docs.google.com/document/d/1eddhKQOPiVhzCaxpz9d3hbuTnp4GCF4tqi6-EiS0Srk/edit?tab=t.0"
-  echo ""
-  echo "Exiting script. Please fix genesis.json and run again."
-  exit 1
-fi
+
+echo "⚠️  WARNING: genesis.json is empty!"
+echo "Please copy the genesis.json content from this link:"
+echo "https://docs.google.com/document/d/1eddhKQOPiVhzCaxpz9d3hbuTnp4GCF4tqi6-EiS0Srk/edit?tab=t.0"
+echo ""
 
 # === Initialize chain ===
 rm -rf gethdata beacondata validatordata genesis.ssz 
