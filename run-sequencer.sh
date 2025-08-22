@@ -43,6 +43,44 @@ cat <<EOF > scripts/start-op-node.sh
 #!/bin/bash
 
 source .env
+
+ROLLUP_JSON=./rollup.json
+L2_RPC=http://localhost:9545
+
+# 1) Fetch the actual L2 genesis block hash (block 0) from op-geth
+echo "Querying L2 genesis block hash from ${L2_RPC} ..."
+GENESIS_HASH=$(curl -s -X POST "${L2_RPC}" \
+  -H "Content-Type: application/json" \
+  --data '{"jsonrpc":"2.0","id":1,"method":"eth_getBlockByNumber","params":["0x0", false]}' \
+  | jq -r '.result.hash')
+
+if [[ -z "${GENESIS_HASH}" || "${GENESIS_HASH}" == "null" ]]; then
+  echo "ERROR: Could not retrieve genesis hash from ${L2_RPC}. Is op-geth running and exposing RPC?"
+  exit 1
+fi
+
+echo "L2 genesis hash from node: ${GENESIS_HASH}"
+
+# Snapshot current value (handles both schemas)
+CURRENT_HASH=$(jq -r '.genesis.l2.hash // .l2.hash' "${ROLLUP_JSON}" 2>/dev/null || echo "")
+
+# 2) Patch rollup.json
+# Handle both possible schemas:
+#  - { "genesis": { "l2": { "hash": "0x..." , "number": 0 } } }
+#  - or legacy: { "l2": { "hash": "0x..." , "number": 0 } }
+TMP_JSON=$(mktemp)
+
+if jq -e '.genesis.l2.hash' "${ROLLUP_JSON}" > /dev/null 2>&1; then
+  jq --arg h "${GENESIS_HASH}" '.genesis.l2.hash = $h' "${ROLLUP_JSON}" > "${TMP_JSON}"
+else
+  jq --arg h "${GENESIS_HASH}" '.l2.hash = $h' "${ROLLUP_JSON}" > "${TMP_JSON}"
+fi
+
+mv "${TMP_JSON}" "${ROLLUP_JSON}"
+echo "Updated ${ROLLUP_JSON} with L2 genesis hash."
+if [[ -n "${CURRENT_HASH}" && "${CURRENT_HASH}" != "${GENESIS_HASH}" ]]; then
+  echo "rollup.json hash (${CURRENT_HASH}) differed from node (${GENESIS_HASH}); updated."
+fi
  
 # Path to the op-node binary we built
 nohup ./op-node \
