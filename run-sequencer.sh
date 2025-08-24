@@ -3,8 +3,8 @@
 cd layer2/sequencer-node
 #save below script to scripts/start-op-geth.sh
 source .env
-cp ../bin/geth .
-cp ../bin/op-node .
+cp ../../layer2/op-geth/build/bin/geth .
+cp ../../layer2/bin/op-node .
 
 cat <<EOF > scripts/start-op-geth.sh
 #!/bin/bash
@@ -12,14 +12,14 @@ cat <<EOF > scripts/start-op-geth.sh
 source .env
  
 # Path to the op-geth binary we built
-./geth \
+nohup ./geth \
   --datadir=./op-geth-data \
   --http \
   --http.addr=0.0.0.0 \
   --http.port=$OP_GETH_HTTP_PORT \
   --http.vhosts="*" \
   --http.corsdomain="*" \
-  --http.api=eth,net,web3,debug,txpool,admin \
+  --http.api=eth,net,web3,debug,txpool,admin,personal \
   --ws \
   --ws.addr=0.0.0.0 \
   --ws.port=$OP_GETH_WS_PORT \
@@ -36,16 +36,54 @@ source .env
   --nodiscover \
   --maxpeers=0 \
   --rollup.disabletxpoolgossip=true \
-  --rollup.sequencerhttp=http://localhost:$OP_NODE_RPC_PORT
+  --rollup.sequencerhttp=http://localhost:$OP_NODE_RPC_PORT > opgeth.log 2>&1 &
 EOF
 
 cat <<EOF > scripts/start-op-node.sh
 #!/bin/bash
 
 source .env
+
+ROLLUP_JSON=./rollup.json
+L2_RPC=http://localhost:9545
+
+# 1) Fetch the actual L2 genesis block hash (block 0) from op-geth
+echo "Querying L2 genesis block hash from ${L2_RPC} ..."
+GENESIS_HASH=$(curl -s -X POST "${L2_RPC}" \
+  -H "Content-Type: application/json" \
+  --data '{"jsonrpc":"2.0","id":1,"method":"eth_getBlockByNumber","params":["0x0", false]}' \
+  | jq -r '.result.hash')
+
+if [[ -z "${GENESIS_HASH}" || "${GENESIS_HASH}" == "null" ]]; then
+  echo "ERROR: Could not retrieve genesis hash from ${L2_RPC}. Is op-geth running and exposing RPC?"
+  exit 1
+fi
+
+echo "L2 genesis hash from node: ${GENESIS_HASH}"
+
+# Snapshot current value (handles both schemas)
+CURRENT_HASH=$(jq -r '.genesis.l2.hash // .l2.hash' "${ROLLUP_JSON}" 2>/dev/null || echo "")
+
+# 2) Patch rollup.json
+# Handle both possible schemas:
+#  - { "genesis": { "l2": { "hash": "0x..." , "number": 0 } } }
+#  - or legacy: { "l2": { "hash": "0x..." , "number": 0 } }
+TMP_JSON=$(mktemp)
+
+if jq -e '.genesis.l2.hash' "${ROLLUP_JSON}" > /dev/null 2>&1; then
+  jq --arg h "${GENESIS_HASH}" '.genesis.l2.hash = $h' "${ROLLUP_JSON}" > "${TMP_JSON}"
+else
+  jq --arg h "${GENESIS_HASH}" '.l2.hash = $h' "${ROLLUP_JSON}" > "${TMP_JSON}"
+fi
+
+mv "${TMP_JSON}" "${ROLLUP_JSON}"
+echo "Updated ${ROLLUP_JSON} with L2 genesis hash."
+if [[ -n "${CURRENT_HASH}" && "${CURRENT_HASH}" != "${GENESIS_HASH}" ]]; then
+  echo "rollup.json hash (${CURRENT_HASH}) differed from node (${GENESIS_HASH}); updated."
+fi
  
 # Path to the op-node binary we built
-./op-node \
+nohup ./op-node \
   --l1=$L1_RPC_URL \
   --l1.beacon=$L1_BEACON_URL \
   --l2=http://localhost:$OP_GETH_AUTH_PORT \
@@ -59,13 +97,15 @@ source .env
   --rpc.addr=0.0.0.0 \
   --rpc.port=$OP_NODE_RPC_PORT \
   --rpc.enable-admin \
-  --log.level=info 
+  --log.level=info > opnode.log 2>&1 &
 EOF
 
 chmod +x scripts/start-op-geth.sh
 chmod +x scripts/start-op-node.sh
 
-../bin/geth init --datadir=./op-geth-data --state.scheme=hash ./genesis.json
+rm -rf op-geth-data
+
+./geth init --datadir=./op-geth-data --state.scheme=hash ./genesis.json
 
 echo "please run below command to start op-geth"
 echo "./scripts/start-op-geth.sh"

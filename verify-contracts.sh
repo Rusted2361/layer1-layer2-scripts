@@ -2,7 +2,7 @@
 
 cd layer2
 
-RPC_URL="http://127.0.0.1:8545"
+RPC_URL="http://43.205.146.113:8545"
 STATE_FILE=".deployer/state.json"
 
 echo "🔍 Contract Verification Script"

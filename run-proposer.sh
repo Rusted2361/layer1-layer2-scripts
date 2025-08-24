@@ -8,7 +8,7 @@ cat <<EOF > scripts/start-proposer.sh
 source .env
  
 # Path to the op-proposer binary we built
-../optimism/op-proposer/bin/op-proposer \
+nohup ../optimism/op-proposer/bin/op-proposer \
   --poll-interval=$POLL_INTERVAL \
   --rpc.port=$PROPOSER_RPC_PORT \
   --rpc.enable-admin \
@@ -21,7 +21,7 @@ source .env
   --num-confirmations=1 \
   --resubmission-timeout=30s \
   --wait-node-sync=true \
-  --log.level=info
+  --log.level=info > opproposer.log 2>&1 &
 EOF
 
 chmod +x scripts/start-proposer.sh

@@ -68,14 +68,9 @@ DEPOSIT_CONTRACT_ADDRESS: 0x4242424242424242424242424242424242424242
 EOF
 fi
 
-# === Download genesis.json ===
-# rm -rf genesis.json
-if [ ! -f genesis.json ]; then
-  echo "[6/9] Downloading genesis.json..."
-  curl -s https://api.jsonbin.io/v3/qs/68a346b6ae596e708fcd5fc7 | jq '.record' > genesis.json
-else
-  echo "[6/9] genesis.json already exists."
-fi
+# === copy genesis.json ===
+rm -rf genesis.json
+cp ../genesis.json .
 
 
 echo "⚠️  WARNING: genesis.json is empty!"
