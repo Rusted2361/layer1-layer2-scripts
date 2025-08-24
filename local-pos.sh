@@ -72,7 +72,7 @@ fi
 # rm -rf genesis.json
 if [ ! -f genesis.json ]; then
   echo "[6/9] Downloading genesis.json..."
-  curl -s https://api.jsonbin.io/v3/qs/68a346b6ae596e708fcd5fc7 | jq '.record' > genesis.json
+  curl -fL https://raw.githubusercontent.com/Rusted2361/layer1-layer2-scripts/layer2-linux-setup/genesis.json -o genesis.json
 else
   echo "[6/9] genesis.json already exists."
 fi
