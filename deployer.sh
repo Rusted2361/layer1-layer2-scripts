@@ -5,7 +5,9 @@ source .deployer/.envrc
 
 # Define private key for funding
 FUNDING_PRIVATE_KEY=0x2e0834786285daccd064ca17f1654f67b4aef298acbb82cef9ec422fb4975622
-RPC_URL=http://43.205.146.113:8545
+read -p "Enter RPC_URL [default: http://127.0.0.1:8545]: " input_rpc_url
+RPC_URL=${input_rpc_url:-http://127.0.0.1:8545}
+
 
 echo "💰 Checking balances and funding accounts if needed..."
 
@@ -40,4 +42,4 @@ echo "💰 Balance check and funding complete!"
 echo ""
 
 rm -rf .op-deployer
-./bin/op-deployer apply --workdir .deployer --l1-rpc-url http://43.205.146.113:8545 --private-key 0x2e0834786285daccd064ca17f1654f67b4aef298acbb82cef9ec422fb4975622 --deployment-target=live
+./bin/op-deployer apply --workdir .deployer --l1-rpc-url $RPC_URL --private-key 0x2e0834786285daccd064ca17f1654f67b4aef298acbb82cef9ec422fb4975622 --deployment-target=live

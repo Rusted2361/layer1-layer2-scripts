@@ -8,7 +8,7 @@ if [ ! -d "op-geth" ]; then
     git clone https://github.com/ethereum-optimism/op-geth.git
 fi
 cd op-geth
-git checkout v1.101511.0
+git checkout 2b9abb39077cb88f6e8a513f09a5ea2c2569dfed
 if go version | grep -q "go1.23.0"; then
       echo "✅ Go 1.23.0 is already installed"
   else
@@ -32,7 +32,7 @@ fi
 cd optimism
 echo "moved in pwd: $(pwd) "
 echo "building op-node"
-git checkout op-node/v1.13.3
+git checkout c8b9f62736a7dad7e569719a84c406605f4472e6
 cd op-node
 just
 echo "op-node created and saved in bin"
@@ -46,7 +46,7 @@ just
 cp ./bin/op-proposer ../../bin
 cd ..
 
-echo "creating op-proposer"
+echo "creating op-batcher"
 cd op-batcher
 just
 cp ./bin/op-batcher ../../bin

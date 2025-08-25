@@ -110,6 +110,8 @@ Terminal 1: Geth Execution Client
 ---------------------------------
 nohup ./bin/geth --datadir gethdata --http --http.addr 0.0.0.0 --http.port 8545 --http.api "eth,net,web3,engine" --http.corsdomain "https://remix.ethereum.org" --http.vhosts "localhost,127.0.0.1" --authrpc.addr localhost --authrpc.port 8551 --authrpc.vhosts localhost --authrpc.jwtsecret gethdata/geth/jwtsecret --allow-insecure-unlock --unlock 0x123463a4b065722e99115d6c222f267d9cabb524 --password ./password.txt --mine --nodiscover --syncmode full > geth.log 2>&1 &
 
+use --http.addr 127.0.0.1 if using hetzner server.
+
 Terminal 2: Beacon Chain
 ------------------------
 nohup ./bin/beacon-chain --datadir=beacondata --min-sync-peers=0 --interop-genesis-state=genesis.ssz --interop-eth1data-votes --bootstrap-node= --chain-config-file=config.yml --chain-id=20253 --execution-endpoint=http://localhost:8551 --accept-terms-of-use --jwt-secret=gethdata/geth/jwtsecret --grpc-gateway-host=0.0.0.0 --grpc-gateway-port=3500 --rpc-host=0.0.0.0 --rpc-port=4000 > chain.log 2>&1 &
