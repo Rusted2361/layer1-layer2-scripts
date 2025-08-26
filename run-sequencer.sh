@@ -36,16 +36,16 @@ nohup ./geth \
   --nodiscover \
   --maxpeers=0 \
   --rollup.disabletxpoolgossip=true \
-  --rollup.sequencerhttp=http://localhost:$OP_NODE_RPC_PORT > opgeth.log 2>&1 &
+  --ipcpath "$(pwd)/op-geth-data/geth.ipc" > opgeth.log 2>&1 &
 EOF
 
-cat <<EOF > scripts/start-op-node.sh
+cat > scripts/start-op-node.sh <<'EOF'
 #!/bin/bash
 
 source .env
 
 ROLLUP_JSON=./rollup.json
-L2_RPC=http://localhost:9545
+L2_RPC=${L2_RPC:-http://localhost:9545}
 
 # 1) Fetch the actual L2 genesis block hash (block 0) from op-geth
 echo "Querying L2 genesis block hash from ${L2_RPC} ..."
@@ -62,12 +62,14 @@ fi
 echo "L2 genesis hash from node: ${GENESIS_HASH}"
 
 # Snapshot current value (handles both schemas)
-CURRENT_HASH=$(jq -r '.genesis.l2.hash // .l2.hash' "${ROLLUP_JSON}" 2>/dev/null || echo "")
+CURRENT_HASH=$(jq -r '.genesis.l2.hash // .l2.hash // empty' "${ROLLUP_JSON}")
 
-# 2) Patch rollup.json
-# Handle both possible schemas:
-#  - { "genesis": { "l2": { "hash": "0x..." , "number": 0 } } }
-#  - or legacy: { "l2": { "hash": "0x..." , "number": 0 } }
+if [[ -z "${CURRENT_HASH}" || "${CURRENT_HASH}" == "null" ]]; then
+  echo "ERROR: ${ROLLUP_JSON} missing current L2 hash (.genesis.l2.hash or .l2.hash)."
+  exit 1
+fi
+
+# 2) Patch rollup.json (support both schemas)
 TMP_JSON=$(mktemp)
 
 if jq -e '.genesis.l2.hash' "${ROLLUP_JSON}" > /dev/null 2>&1; then

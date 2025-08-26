@@ -65,7 +65,7 @@ echo "create .envrc file in .deployer"
 if [ ! -d "optimism" ]; then
   git clone https://github.com/ethereum-optimism/optimism.git 
   cd optimism
-  git checkout op-node/v1.13.3
+  git checkout c8b9f62736a7dad7e569719a84c406605f4472e6
   echo "Paste output from following to .envrc"
   ./packages/contracts-bedrock/scripts/getting-started/wallets.sh -o .deployer/.envrc
   cd ..
