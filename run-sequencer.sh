@@ -36,8 +36,7 @@ nohup ./geth \
   --nodiscover \
   --maxpeers=0 \
   --rollup.disabletxpoolgossip=true \
-  --ipcpath "$(pwd)/op-geth-data/geth.ipc" \
-  --rollup.sequencerhttp=http://localhost:$OP_NODE_RPC_PORT > opgeth.log 2>&1 &
+  --ipcpath "$(pwd)/op-geth-data/geth.ipc" > opgeth.log 2>&1 &
 EOF
 
 cat > scripts/start-op-node.sh <<'EOF'
