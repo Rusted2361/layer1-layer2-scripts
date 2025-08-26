@@ -146,7 +146,7 @@ cd proposer-node
 cp ../../layer2/.deployer/state.json .
 
 # Extract the DisputeGameFactory address
-GAME_FACTORY_ADDRESS=$(cat state.json | jq -r '.opChainDeployments[0].disputeGameFactoryProxyAddress')
+GAME_FACTORY_ADDRESS=$(cat state.json | jq -r '.opChainDeployments[0].DisputeGameFactoryProxy')
 echo "📄 DisputeGameFactory Address: $GAME_FACTORY_ADDRESS"
 
 echo ""

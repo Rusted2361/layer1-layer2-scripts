@@ -26,21 +26,24 @@ fi
 
 # Step 3: Download op-deployer if not already present
 if [ ! -f "bin/op-deployer" ]; then
-  curl -sL https://codeload.github.com/ethereum-optimism/optimism/tar.gz/refs/tags/op-deployer/v0.2.0-rc.1 -o op-deployer-v0.2.0-rc.1.tar.gz
-  tar -xzf op-deployer-v0.2.0-rc.1.tar.gz
-  cd optimism-op-deployer-v0.2.0-rc.1/op-deployer
-  if go version | grep -q "go1.23.0"; then
-      echo "✅ Go 1.23.0 is already installed"
-  else
-      echo "⬇️ Installing Go 1.23.0 using gvm..."
-      gvm install go1.23.0
-      gvm use go1.23.0 --default
-      echo "✅ Go 1.23.0 installed and set as default"
-  fi
-  echo "pwd: $(pwd)"
-  just
-  cp bin/op-deployer ../../../layer2/bin/
-  # rm -rf op-deployer-v0.2.0-rc.1.tar.gz optimism-op-deployer-v0.2.0-rc.1
+    curl -L "https://codeload.github.com/ethereum-optimism/optimism/tar.gz/refs/tags/op-deployer/v0.4.2" \
+    -o op-deployer-0.4.2.tar.gz
+    # Extract the tarball
+    tar -xzf op-deployer-0.4.2.tar.gz
+    # Move into the extracted folder
+    cd optimism-op-deployer-v0.4.2/op-deployer
+if go version | grep -q "go1.23.8"; then
+    echo "✅ Go 1.23.8 is already installed"
+else
+    echo "⬇️ Installing Go 1.23.8 using gvm..."
+    gvm install go1.23.8
+    gvm use go1.23.8 --default
+    echo "✅ Go 1.23.8 installed and set as default"
+fi
+echo "pwd: $(pwd)"
+just
+cp bin/op-deployer ../../../layer2/bin/
+# rm -rf op-deployer-v0.2.0-rc.1.tar.gz optimism-op-deployer-v0.2.0-rc.1
 
 cd ../../../layer2
 fi

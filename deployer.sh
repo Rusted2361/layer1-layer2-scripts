@@ -5,7 +5,7 @@ source .deployer/.envrc
 
 # Define private key for funding
 FUNDING_PRIVATE_KEY=0x2e0834786285daccd064ca17f1654f67b4aef298acbb82cef9ec422fb4975622
-read -p "Enter RPC_URL [default: http://127.0.0.1:8545]: " input_rpc_url
+read -p "Enter L1_RPC_URL [default: http://127.0.0.1:8545]: " input_rpc_url
 RPC_URL=${input_rpc_url:-http://127.0.0.1:8545}
 
 

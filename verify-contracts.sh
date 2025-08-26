@@ -2,7 +2,8 @@
 
 cd layer2
 
-RPC_URL="http://43.205.146.113:8545"
+read -p "Enter L1_RPC_URL [default: http://127.0.0.1:8545]: " input_rpc_url
+RPC_URL=${input_rpc_url:-http://127.0.0.1:8545}
 STATE_FILE=".deployer/state.json"
 
 echo "🔍 Contract Verification Script"
@@ -39,18 +40,18 @@ echo "📋 Implementation Contracts:"
 echo "=============================="
 
 # Extract implementation addresses
-opcm_address=$(cat $STATE_FILE | grep -o '"opcmAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
-delayed_weth_address=$(cat $STATE_FILE | grep -o '"delayedWETHImplAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
-portal_address=$(cat $STATE_FILE | grep -o '"optimismPortalImplAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
-preimage_address=$(cat $STATE_FILE | grep -o '"preimageOracleSingletonAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
-mips_address=$(cat $STATE_FILE | grep -o '"mipsSingletonAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
-system_config_address=$(cat $STATE_FILE | grep -o '"systemConfigImplAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
-l1_messenger_address=$(cat $STATE_FILE | grep -o '"l1CrossDomainMessengerImplAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
-l1_erc721_address=$(cat $STATE_FILE | grep -o '"l1ERC721BridgeImplAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
-l1_bridge_address=$(cat $STATE_FILE | grep -o '"l1StandardBridgeImplAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
-erc20_factory_address=$(cat $STATE_FILE | grep -o '"optimismMintableERC20FactoryImplAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
-dispute_factory_address=$(cat $STATE_FILE | grep -o '"disputeGameFactoryImplAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
-anchor_registry_address=$(cat $STATE_FILE | grep -o '"anchorStateRegistryImplAddress":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+opcm_address=$(cat $STATE_FILE | grep -o '"OpcmImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+delayed_weth_address=$(cat $STATE_FILE | grep -o '"DelayedWethImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+portal_address=$(cat $STATE_FILE | grep -o '"OptimismPortalImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+preimage_address=$(cat $STATE_FILE | grep -o '"PreimageOracleImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+mips_address=$(cat $STATE_FILE | grep -o '"MipsImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+system_config_address=$(cat $STATE_FILE | grep -o '"SystemConfigImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+l1_messenger_address=$(cat $STATE_FILE | grep -o '"L1CrossDomainMessengerImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+l1_erc721_address=$(cat $STATE_FILE | grep -o '"L1Erc721BridgeImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+l1_bridge_address=$(cat $STATE_FILE | grep -o '"L1StandardBridgeImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+erc20_factory_address=$(cat $STATE_FILE | grep -o '"OptimismMintableErc20FactoryImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+dispute_factory_address=$(cat $STATE_FILE | grep -o '"DisputeGameFactoryImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
+anchor_registry_address=$(cat $STATE_FILE | grep -o '"AnchorStateRegistryImpl":[[:space:]]*"[^"]*"' | cut -d'"' -f4)
 
 # Verify all implementation contracts
 verify_contract "$opcm_address" "OPCM"
