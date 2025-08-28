@@ -45,17 +45,16 @@ cat > scripts/start-op-node.sh <<'EOF'
 source .env
 
 ROLLUP_JSON=./rollup.json
-L2_RPC=${L2_RPC:-http://localhost:9545}
 
 # 1) Fetch the actual L2 genesis block hash (block 0) from op-geth
-echo "Querying L2 genesis block hash from ${L2_RPC} ..."
-GENESIS_HASH=$(curl -s -X POST "${L2_RPC}" \
+echo "Querying L2 genesis block hash from $L2_RPC_URL ..."
+GENESIS_HASH=$(curl -s -X POST "$L2_RPC_URL" \
   -H "Content-Type: application/json" \
   --data '{"jsonrpc":"2.0","id":1,"method":"eth_getBlockByNumber","params":["0x0", false]}' \
   | jq -r '.result.hash')
 
 if [[ -z "${GENESIS_HASH}" || "${GENESIS_HASH}" == "null" ]]; then
-  echo "ERROR: Could not retrieve genesis hash from ${L2_RPC}. Is op-geth running and exposing RPC?"
+  echo "ERROR: Could not retrieve genesis hash from $L2_RPC_URL. Is op-geth running and exposing RPC?"
   exit 1
 fi
 
@@ -88,7 +87,7 @@ fi
 nohup ./op-node \
   --l1=$L1_RPC_URL \
   --l1.beacon=$L1_BEACON_URL \
-  --l2=http://localhost:$OP_GETH_AUTH_PORT \
+  --l2=$L2_AUTH_RPC_URL \
   --l2.jwt-secret=$JWT_SECRET \
   --rollup.config=./rollup.json \
   --sequencer.enabled=$SEQUENCER_ENABLED \
