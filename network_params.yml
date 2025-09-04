@@ -1,0 +1,25 @@
+participants:
+  - el_type: geth
+    cl_type: prysm
+    el_extra_params:
+      - "--http.addr=0.0.0.0"
+      - "--ws.addr=0.0.0.0"
+      - "--metrics.addr=0.0.0.0"
+      - "--nodiscover"
+      - "--syncmode full"
+    cl_extra_params:
+      - "--min-sync-peers=0"
+    
+network_params:
+  preset: minimal
+  network_id: "20253"
+port_publisher:
+  nat_exit_ip: "auto"
+  el:
+    enabled: true
+    public_port_start: 32000
+    nat_exit_ip: "auto"
+  cl:
+    enabled: true
+    public_port_start: 33000
+    nat_exit_ip: "auto"

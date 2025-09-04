@@ -31,6 +31,9 @@ nohup ./geth \
   --authrpc.jwtsecret=$JWT_SECRET \
   --port=$OP_GETH_P2P_PORT \
   --networkid="$OP_GETH_NETWORK_ID" \
+  --metrics \
+  --metrics.addr=0.0.0.0 \
+  --metrics.port=9001 \
   --syncmode=full \
   --gcmode=archive \
   --nodiscover \
