@@ -39,6 +39,7 @@ nohup ./geth \
   --nodiscover \
   --maxpeers=0 \
   --rollup.disabletxpoolgossip=true \
+  --rollup.sequencerhttp=$ROLLUP_RPC_URL \
   --ipcpath "$(pwd)/op-geth-data/geth.ipc" > opgeth.log 2>&1 &
 EOF
 
@@ -98,6 +99,7 @@ nohup ./op-node \
   --sequencer.max-safe-lag=3600 \
   --verifier.l1-confs=4 \
   --p2p.disable \
+  --p2p.sequencer.key=$PRIVATE_KEY \
   --rpc.addr=0.0.0.0 \
   --rpc.port=$OP_NODE_RPC_PORT \
   --rpc.enable-admin \

@@ -74,7 +74,8 @@ if [ ! -d "optimism" ]; then
   cd ..
 fi
 if [ ! -f ".deployer/.envrc" ]; then
-  ./optimism/packages/contracts-bedrock/scripts/getting-started/wallets.sh > .deployer/.envrc
+  # ./optimism/packages/contracts-bedrock/scripts/getting-started/wallets.sh > .deployer/.envrc
+   cp ../.envrc .deployer/.envrc
 fi
 # Add additional environment variables to .envrc
 cat >> .deployer/.envrc << 'EOF'

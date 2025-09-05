@@ -95,8 +95,8 @@ read -p "Rollup RPC URL [default: http://localhost:8547] <op-node-ip:8547>:" ROL
 ROLLUP_RPC_URL=${ROLLUP_RPC_INPUT:-http://localhost:8547}
 
 # Ask for private key
-read -p "Private Key [default: 0x2e0834786285daccd064ca17f1654f67b4aef298acbb82cef9ec422fb4975622]: " PRIVATE_KEY_INPUT
-PRIVATE_KEY=${PRIVATE_KEY_INPUT:-0x2e0834786285daccd064ca17f1654f67b4aef298acbb82cef9ec422fb4975622}
+read -p "Sequencer Private Key [default: $GS_SEQUENCER_PRIVATE_KEY]: " SEQUENCER_KEY_INPUT
+SEQUENCER_PRIVATE_KEY=${SEQUENCER_KEY_INPUT:-$GS_SEQUENCER_PRIVATE_KEY}
 
 # Ask for public IP confirmation
 read -p "P2P Advertise IP [detected: $PUBLIC_IP]: " PUBLIC_IP_INPUT
@@ -112,13 +112,14 @@ L1_RPC_URL=$L1_RPC_URL
 L1_BEACON_URL=$L1_BEACON_URL
 L2_RPC_URL=$L2_RPC_URL
 L2_AUTH_RPC_URL=$L2_AUTH_RPC_URL
+ROLLUP_RPC_URL=$ROLLUP_RPC_URL
 
 # Sequencer configuration
 SEQUENCER_ENABLED=true
 SEQUENCER_STOPPED=false
 
 # Private keys
-PRIVATE_KEY=$PRIVATE_KEY
+PRIVATE_KEY=$SEQUENCER_PRIVATE_KEY
 
 # P2P configuration
 P2P_LISTEN_PORT=9222
