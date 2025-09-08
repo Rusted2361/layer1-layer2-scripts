@@ -84,9 +84,19 @@ L1_RPC_URL=${L1_RPC_INPUT:-http://43.205.146.113:8545}
 read -p "L1 Beacon URL [default: http://43.205.146.113:3500]: " L1_BEACON_INPUT
 L1_BEACON_URL=${L1_BEACON_INPUT:-http://43.205.146.113:3500}
 
+read -p "Enter L2 RPC URL [default: http://localhost:9545] <op-geth-ip:9545>:" INPUT_L2_RPC
+L2_RPC_URL=${INPUT_L2_RPC:-http://localhost:9545}
+
+read -p "Enter L2 Auth URL [default: http://localhost:9551] <op-geth-ip:9551>:" INPUT_L2_AUTH_RPC_URL
+L2_AUTH_RPC_URL=${INPUT_L2_AUTH_RPC_URL:-http://localhost:9551}
+
+# Ask for Rollup RPC URL
+read -p "Rollup RPC URL [default: http://localhost:8547] <op-node-ip:8547>:" ROLLUP_RPC_INPUT
+ROLLUP_RPC_URL=${ROLLUP_RPC_INPUT:-http://localhost:8547}
+
 # Ask for private key
-read -p "Private Key [default: 0x2e0834786285daccd064ca17f1654f67b4aef298acbb82cef9ec422fb4975622]: " PRIVATE_KEY_INPUT
-PRIVATE_KEY=${PRIVATE_KEY_INPUT:-0x2e0834786285daccd064ca17f1654f67b4aef298acbb82cef9ec422fb4975622}
+read -p "Sequencer Private Key [default: $GS_SEQUENCER_PRIVATE_KEY]: " SEQUENCER_KEY_INPUT
+SEQUENCER_PRIVATE_KEY=${SEQUENCER_KEY_INPUT:-$GS_SEQUENCER_PRIVATE_KEY}
 
 # Ask for public IP confirmation
 read -p "P2P Advertise IP [detected: $PUBLIC_IP]: " PUBLIC_IP_INPUT
@@ -100,13 +110,16 @@ cat > .env << EOF
 # L1 Configuration
 L1_RPC_URL=$L1_RPC_URL
 L1_BEACON_URL=$L1_BEACON_URL
+L2_RPC_URL=$L2_RPC_URL
+L2_AUTH_RPC_URL=$L2_AUTH_RPC_URL
+ROLLUP_RPC_URL=$ROLLUP_RPC_URL
 
 # Sequencer configuration
 SEQUENCER_ENABLED=true
 SEQUENCER_STOPPED=false
 
 # Private keys
-PRIVATE_KEY=$PRIVATE_KEY
+PRIVATE_KEY=$SEQUENCER_PRIVATE_KEY
 
 # P2P configuration
 P2P_LISTEN_PORT=9222
@@ -146,23 +159,12 @@ cd proposer-node
 cp ../../layer2/.deployer/state.json .
 
 # Extract the DisputeGameFactory address
-GAME_FACTORY_ADDRESS=$(cat state.json | jq -r '.opChainDeployments[0].disputeGameFactoryProxyAddress')
+GAME_FACTORY_ADDRESS=$(cat state.json | jq -r '.opChainDeployments[0].DisputeGameFactoryProxy')
 echo "📄 DisputeGameFactory Address: $GAME_FACTORY_ADDRESS"
 
 echo ""
 echo "Please provide the following proposer configuration values:"
 
-# Ask for L1 RPC URL
-read -p "L1 RPC URL [default: http://43.205.146.113:8545]: " L1_RPC_INPUT
-L1_RPC_URL=${L1_RPC_INPUT:-http://43.205.146.113:8545}
-
-# Ask for L2 RPC URL
-read -p "L2 RPC URL [default: http://localhost:9545]: " L2_RPC_INPUT
-L2_RPC_URL=${L2_RPC_INPUT:-http://localhost:9545}
-
-# Ask for Rollup RPC URL
-read -p "Rollup RPC URL [default: http://localhost:8547]: " ROLLUP_RPC_INPUT
-ROLLUP_RPC_URL=${ROLLUP_RPC_INPUT:-http://localhost:8547}
 
 # Ask for private key (default from environment)
 read -p "Proposer Private Key [default: $GS_PROPOSER_PRIVATE_KEY]: " PROPOSER_KEY_INPUT
@@ -217,18 +219,6 @@ echo "📄 Batch Inbox Address: $BATCH_INBOX_ADDRESS"
 
 echo ""
 echo "Please provide the following batcher configuration values:"
-
-# Ask for L1 RPC URL
-read -p "L1 RPC URL [default: http://43.205.146.113:8545]: " L1_RPC_INPUT
-L1_RPC_URL=${L1_RPC_INPUT:-http://43.205.146.113:8545}
-
-# Ask for L2 RPC URL
-read -p "L2 RPC URL [default: http://localhost:9545]: " L2_RPC_INPUT
-L2_RPC_URL=${L2_RPC_INPUT:-http://localhost:9545}
-
-# Ask for Rollup RPC URL
-read -p "Rollup RPC URL [default: http://localhost:8547]: " ROLLUP_RPC_INPUT
-ROLLUP_RPC_URL=${ROLLUP_RPC_INPUT:-http://localhost:8547}
 
 # Ask for private key (default from environment)
 read -p "Batcher Private Key [default: $GS_BATCHER_PRIVATE_KEY]: " BATCHER_KEY_INPUT

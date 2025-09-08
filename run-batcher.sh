@@ -26,7 +26,7 @@ nohup ../optimism/op-batcher/bin/op-batcher \
   --l1-eth-rpc=$L1_RPC_URL \
   --private-key=$BATCHER_PRIVATE_KEY \
   --batch-type=1 \
-  --data-availability-type=calldata \
+  --data-availability-type=auto \
   --throttle-threshold=0 \
   --throttle-always-block-size=0 \
   --log.level=info > opbatcher.log 2>&1 &

@@ -31,11 +31,15 @@ nohup ./geth \
   --authrpc.jwtsecret=$JWT_SECRET \
   --port=$OP_GETH_P2P_PORT \
   --networkid="$OP_GETH_NETWORK_ID" \
+  --metrics \
+  --metrics.addr=0.0.0.0 \
+  --metrics.port=9001 \
   --syncmode=full \
   --gcmode=archive \
   --nodiscover \
   --maxpeers=0 \
   --rollup.disabletxpoolgossip=true \
+  --rollup.sequencerhttp=$ROLLUP_RPC_URL \
   --ipcpath "$(pwd)/op-geth-data/geth.ipc" > opgeth.log 2>&1 &
 EOF
 
@@ -45,17 +49,16 @@ cat > scripts/start-op-node.sh <<'EOF'
 source .env
 
 ROLLUP_JSON=./rollup.json
-L2_RPC=${L2_RPC:-http://localhost:9545}
 
 # 1) Fetch the actual L2 genesis block hash (block 0) from op-geth
-echo "Querying L2 genesis block hash from ${L2_RPC} ..."
-GENESIS_HASH=$(curl -s -X POST "${L2_RPC}" \
+echo "Querying L2 genesis block hash from $L2_RPC_URL ..."
+GENESIS_HASH=$(curl -s -X POST "$L2_RPC_URL" \
   -H "Content-Type: application/json" \
   --data '{"jsonrpc":"2.0","id":1,"method":"eth_getBlockByNumber","params":["0x0", false]}' \
   | jq -r '.result.hash')
 
 if [[ -z "${GENESIS_HASH}" || "${GENESIS_HASH}" == "null" ]]; then
-  echo "ERROR: Could not retrieve genesis hash from ${L2_RPC}. Is op-geth running and exposing RPC?"
+  echo "ERROR: Could not retrieve genesis hash from $L2_RPC_URL. Is op-geth running and exposing RPC?"
   exit 1
 fi
 
@@ -88,7 +91,7 @@ fi
 nohup ./op-node \
   --l1=$L1_RPC_URL \
   --l1.beacon=$L1_BEACON_URL \
-  --l2=http://localhost:$OP_GETH_AUTH_PORT \
+  --l2=$L2_AUTH_RPC_URL \
   --l2.jwt-secret=$JWT_SECRET \
   --rollup.config=./rollup.json \
   --sequencer.enabled=$SEQUENCER_ENABLED \
@@ -96,6 +99,7 @@ nohup ./op-node \
   --sequencer.max-safe-lag=3600 \
   --verifier.l1-confs=4 \
   --p2p.disable \
+  --p2p.sequencer.key=$PRIVATE_KEY \
   --rpc.addr=0.0.0.0 \
   --rpc.port=$OP_NODE_RPC_PORT \
   --rpc.enable-admin \
