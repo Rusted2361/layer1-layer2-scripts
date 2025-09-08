@@ -1,6 +1,8 @@
 participants:
   - el_type: geth
+    el_volume_size: 20480
     cl_type: prysm
+    cl_volume_size: 20480
     el_extra_params:
       - "--http.addr=0.0.0.0"
       - "--ws.addr=0.0.0.0"
@@ -11,8 +13,9 @@ participants:
       - "--min-sync-peers=0"
     
 network_params:
-  preset: minimal
+  preset: mainnet
   network_id: "20253"
+persistent: true
 port_publisher:
   nat_exit_ip: "auto"
   el:
