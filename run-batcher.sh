@@ -29,6 +29,9 @@ nohup ../optimism/op-batcher/bin/op-batcher \
   --data-availability-type=auto \
   --throttle-threshold=0 \
   --throttle-always-block-size=0 \
+  --metrics.addr=0.0.0.0 \
+  --metrics.enabled=true \
+  --metrics.port=9005 \
   --log.level=info > opbatcher.log 2>&1 &
 EOF
 

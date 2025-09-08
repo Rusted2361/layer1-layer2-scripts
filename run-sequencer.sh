@@ -103,6 +103,9 @@ nohup ./op-node \
   --rpc.addr=0.0.0.0 \
   --rpc.port=$OP_NODE_RPC_PORT \
   --rpc.enable-admin \
+  --metrics.addr=0.0.0.0 \
+  --metrics.enabled=true \
+  --metrics.port=9003 \
   --log.level=info > opnode.log 2>&1 &
 EOF
 
