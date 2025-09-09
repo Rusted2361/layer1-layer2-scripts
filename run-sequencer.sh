@@ -19,12 +19,12 @@ nohup ./geth \
   --http.port=$OP_GETH_HTTP_PORT \
   --http.vhosts="*" \
   --http.corsdomain="*" \
-  --http.api=eth,net,web3,debug,txpool,admin,personal \
+  --http.api=eth,net,web3,debug,txpool,admin,personal,miner \
   --ws \
   --ws.addr=0.0.0.0 \
   --ws.port=$OP_GETH_WS_PORT \
   --ws.origins="*" \
-  --ws.api=eth,net,web3,debug,txpool,admin \
+  --ws.api=eth,net,web3,debug,txpool,admin,miner \
   --authrpc.addr=0.0.0.0 \
   --authrpc.port=$OP_GETH_AUTH_PORT \
   --authrpc.vhosts="*" \
@@ -40,6 +40,9 @@ nohup ./geth \
   --maxpeers=0 \
   --rollup.disabletxpoolgossip=true \
   --rollup.sequencerhttp=$ROLLUP_RPC_URL \
+  --mine \
+  --miner.etherbase=0x4670399B3879a967cdD884F09ab26A4bb230825a \
+  --miner.gaslimit=30000000 \
   --ipcpath "$(pwd)/op-geth-data/geth.ipc" > opgeth.log 2>&1 &
 EOF
 
