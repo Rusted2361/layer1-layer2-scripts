@@ -21,6 +21,9 @@ nohup ../optimism/op-proposer/bin/op-proposer \
   --num-confirmations=1 \
   --resubmission-timeout=30s \
   --wait-node-sync=true \
+  --metrics.addr=0.0.0.0 \
+  --metrics.enabled=true \
+  --metrics.port=9004 \
   --log.level=info > opproposer.log 2>&1 &
 EOF
 

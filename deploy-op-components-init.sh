@@ -50,10 +50,24 @@ echo "creating op-batcher"
 cd op-batcher
 just
 cp ./bin/op-batcher ../../bin
+echo "creating op-challenger"
+cd ..
+
+echo "creating op-challenger"
+cd op-challenger
+just op-challenger
+cp ./bin/op-challenger ../../bin
+cd ..
+
+echo "creating cannon"
+cd cannon
+make
+cp ./bin/cannon ../../bin
+
 cd ../../
 echo "pwd: $(pwd)"
 
-mkdir sequencer-node proposer-node batcher-node
+mkdir sequencer-node proposer-node batcher-node challenger-node
 
 cd sequencer-node
 cp ../../layer2/.deployer/genesis.json .
@@ -257,6 +271,57 @@ EOF
 echo "✅ Batcher .env file created at batcher-node/.env"
 echo "📄 Contents:"
 cat .env
+cd ..
 
-echo ""
-echo "🚀 Batcher environment ready!"
+echo "creating challenger-node"
+cd challenger-node
+mkdir scripts
+
+cp ../sequencer-node/genesis.json .
+cp ../sequencer-node/rollup.json .
+
+# Copy the state.json from .deployer directory
+cp ../../layer2/.deployer/state.json .
+
+# Extract the DisputeGameFactory address
+GAME_FACTORY_ADDRESS=$(cat state.json | jq -r '.opChainDeployments[0].DisputeGameFactoryProxy')
+echo "📄 DisputeGameFactory Address: $GAME_FACTORY_ADDRESS"
+
+cat > .env << EOF
+# L1 Configuration - Replace with your actual RPC URLs
+L1_RPC_URL=$L1_RPC_URL
+L1_BEACON=$L1_BEACON_URL
+# L2 Configuration - Replace with your actual node endpoints  
+L2_RPC_URL=$L2_RPC_URL
+ROLLUP_RPC_URL=$ROLLUP_RPC_URL
+
+ 
+# Wallet configuration - Choose either mnemonic + HD path OR private key
+MNEMONIC="test test test test test test test test test test test junk"
+HD_PATH="m/44'/60'/0'/0/0"
+CHALLENGER_PRIVATE_KEY=$GS_CHALLENGER_PRIVATE_KEY
+ 
+# Network configuration
+GAME_FACTORY_ADDRESS=$GAME_FACTORY_ADDRESS
+ 
+# Trace configuration
+TRACE_TYPE=permissioned,cannon
+ 
+# Data directory
+DATADIR=./challenger-data
+ 
+# Cannon configuration
+# Path to the cannon binary (built from optimism repo)
+CANNON_BIN=../optimism/cannon/bin/cannon
+ 
+# Configuration files
+CANNON_ROLLUP_CONFIG=./rollup.json
+CANNON_L2_GENESIS=./genesis.json
+CANNON_SERVER=../optimism/op-program/bin/op-program
+CANNON_PRESTATE=
+EOF
+
+echo "✅ Challenger .env file created at challenger-node/.env" 
+echo "🎯 Game Factory Address: $GAME_FACTORY_ADDRESS"
+echo "📄 Contents:"
+cat .env

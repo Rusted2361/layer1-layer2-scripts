@@ -1,18 +1,31 @@
 participants:
   - el_type: geth
+    # el_volume_size: 52500
+    # el_min_cpu: 1000  # 1 core minimum
+    # el_max_cpu: 1500  # 1.5 cores maximum  
+    # el_min_mem: 2048  # 2GB minimum
+    # el_max_mem: 3072  # 3GB maximum
     cl_type: prysm
+    # cl_volume_size: 20480
+    # cl_min_cpu: 500   # 0.5 core minimum
+    # cl_max_cpu: 1000  # 1 core maximum
+    # cl_min_mem: 1024  # 1GB minimum
+    # cl_max_mem: 2048  # 2GB maximum
     el_extra_params:
       - "--http.addr=0.0.0.0"
       - "--ws.addr=0.0.0.0"
       - "--metrics.addr=0.0.0.0"
       - "--nodiscover"
+      - "--state.scheme=hash"
+      - "--gcmode=archive"
       - "--syncmode full"
     cl_extra_params:
       - "--min-sync-peers=0"
     
 network_params:
-  preset: minimal
+  preset: mainnet
   network_id: "20253"
+persistent: true
 port_publisher:
   nat_exit_ip: "auto"
   el:
