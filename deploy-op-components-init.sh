@@ -277,9 +277,6 @@ echo "creating challenger-node"
 cd challenger-node
 mkdir scripts
 
-cp ../sequencer-node/genesis.json .
-cp ../sequencer-node/rollup.json .
-
 # Copy the state.json from .deployer directory
 cp ../../layer2/.deployer/state.json .
 
