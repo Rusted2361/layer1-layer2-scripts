@@ -34,8 +34,9 @@ nohup ./geth \
   --metrics \
   --metrics.addr=0.0.0.0 \
   --metrics.port=9001 \
-  --syncmode=full \
+  --state.scheme=hash \
   --gcmode=archive \
+  --syncmode=full \
   --nodiscover \
   --maxpeers=0 \
   --rollup.disabletxpoolgossip=true \
@@ -109,6 +110,7 @@ nohup ./op-node \
   --metrics.addr=0.0.0.0 \
   --metrics.enabled=true \
   --metrics.port=9003 \
+  --safedb.path=./safedb \
   --log.level=info > opnode.log 2>&1 &
 EOF
 
