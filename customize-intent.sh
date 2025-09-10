@@ -23,7 +23,7 @@ sed -i "s|sequencerFeeVaultRecipient = \"0x0000000000000000000000000000000000000
 sed -i "s|l1ProxyAdminOwner = \"0x0000000000000000000000000000000000000000\"|l1ProxyAdminOwner = \"$GS_ADMIN_ADDRESS\"|g" .deployer/intent.toml
 sed -i "s|l2ProxyAdminOwner = \"0x0000000000000000000000000000000000000000\"|l2ProxyAdminOwner = \"$GS_ADMIN_ADDRESS\"|g" .deployer/intent.toml
 sed -i "s|systemConfigOwner = \"0x0000000000000000000000000000000000000000\"|systemConfigOwner = \"$GS_ADMIN_ADDRESS\"|g" .deployer/intent.toml
-sed -i "s|challenger = \"0x0000000000000000000000000000000000000000\"|challenger = \"$GS_ADMIN_ADDRESS\"|g" .deployer/intent.toml
+sed -i "s|challenger = \"0x0000000000000000000000000000000000000000\"|challenger = \"$GS_CHALLENGER_ADDRESS\"|g" .deployer/intent.toml
 sed -i "s|unsafeBlockSigner = \"0x0000000000000000000000000000000000000000\"|unsafeBlockSigner = \"$GS_SEQUENCER_ADDRESS\"|g" .deployer/intent.toml
 sed -i "s|batcher = \"0x0000000000000000000000000000000000000000\"|batcher = \"$GS_BATCHER_ADDRESS\"|g" .deployer/intent.toml
 sed -i "s|proposer = \"0x0000000000000000000000000000000000000000\"|proposer = \"$GS_PROPOSER_ADDRESS\"|g" .deployer/intent.toml
