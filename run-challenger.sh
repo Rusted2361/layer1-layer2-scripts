@@ -1,10 +1,11 @@
 #!/bin/bash
 #some prework to get the prestate
 cd layer2/challenger-node
-cp genesis.json ../optimism/op-program/chainconfig/configs/20254-genesis.json
-cp rollup.json ../optimism/op-program/chainconfig/configs/20254-rollup.json
+
 cp ../sequencer-node/genesis.json .
 cp ../sequencer-node/rollup.json .
+cp genesis.json ../optimism/op-program/chainconfig/configs/20254-genesis.json
+cp rollup.json ../optimism/op-program/chainconfig/configs/20254-rollup.json
 mkdir -p challenger-data
 
 cd ../optimism
